@@ -1,0 +1,17 @@
+<div class="comment">
+  <div class="user-block">
+    <div class="user-name-interior cf">
+      <img class="user-image" src="<%= comment.user.avatar.url(:medium) %>">
+      <div class="user-name"><%= link_to comment.user.user_name, profile_path(comment.user.user_name) %></div>
+      <div class="comment-time-ago"><%= time_ago_in_words(comment.created_at).gsub(/about|less than/,'') %></div>
+    </div>
+  </div>
+  <div class="comment-content">
+    <%= comment.content %>
+    <%- if comment.user == current_user %>
+    <span class="comment-delete">		
+      <%= link_to "<i class='fa fa-times'></i>".html_safe, post_comment_path(post, comment), method: :delete, data: {confirm: "Are you sure?"}, remote: true %>
+    </span>
+    <% end %>
+  </div>
+</div>

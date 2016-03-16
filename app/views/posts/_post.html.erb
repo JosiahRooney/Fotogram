@@ -1,0 +1,42 @@
+<div class="post">
+  <div class="post-head">
+    <div class="name"><img class="user-image" src="<%= post.user.avatar.url(:medium) %>"> <%= link_to post.user.user_name, profile_path(post.user.user_name) %></div>
+    <dir class="time-ago"><%= time_ago_in_words(post.created_at).gsub(/about|less than/,'') %></dir>
+  </div>
+  <div class="image center-block">
+    <%= link_to (image_tag post.image.url(:medium), class:'img-responsive'), post_path(post) %>
+    <div class="post-bottom">
+      <div class="comment-like-form">
+        <div class="col-sm-1">
+          <%= link_to ''.html_safe, like_post_path(post.id), remote: true, id: "like_#{post.id}", class: "glyphicon #{liked_post post}" %>
+        </div>
+      </div>
+      <%= render 'posts/likes', post: post %>
+    </div>
+    <div class="caption">
+      <div class="user-block cf">
+        <img class="user-image" src="<%= post.user.avatar.url(:medium) %>">
+        <div class="user-name">
+          <%= link_to post.user.user_name, profile_path(post.user.user_name) %>
+        </div>
+      </div>
+      <div class="caption-content">
+        <%= post.caption %>
+      </div>
+    </div>
+    <%- if post.comments %>
+    <div class="comments" id="comments_<%= post.id %>">
+      <%- unless post.comments.count <= 4 %>
+      <%= link_to "view all #{post.comments.count} comments", post_comments_path(post), remote: true, class: "more-comments", data: { post_id: "#{post.id}", type: "html" } %>
+      <% end %>
+      <%= render post.comments.last(4), post: post %>
+    </div>
+    <% end %>
+    <div class="comment-form cf">
+      <%= form_for [post, post.comments.build], remote: true do |f| %>
+      <%= f.text_field :content, placeholder: "Add a comment...", id: "comment_content_#{post.id}", class: "comment-add" %>
+      <%= f.button "<img src=\"/assets/arrow.png\">".html_safe, class: "comment-submit" %>
+      <% end %>
+    </div>
+  </div>
+</div>
